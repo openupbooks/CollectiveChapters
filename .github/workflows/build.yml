@@ -16,21 +16,28 @@ jobs:
       - name: Install deps
         run: |
           pip install mkdocs mkdocs-material mkdocs-with-pdf pymdown-extensions pyyaml
-      - name: Content check
-        run: python scripts/content_check.py
-      - name: Generate indexes & contributors
-        run: python scripts/generate_indexes.py
-      - name: Build site (no global PDF)
-        run: |
-          mkdocs build --clean
-  	  - name: Build per-topic PDFs
-      if: false
-      run: python scripts/build_topic_pdfs.py
+- name: Content check
+  run: python scripts/content_check.py
 
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
+- name: Generate indexes & contributors
+  env:
+    REPO_SLUG: openupbooks/collectivechapters
+  run: python scripts/generate_indexes.py
+
+- name: Build site (no global PDF)
+  run: |
+    mkdocs build --clean
+
+# (PDF stap uitgeschakeld)
+# - name: Build per-topic PDFs
+#   if: false
+#   run: python scripts/build_topic_pdfs.py
+
+- name: Upload artifact
+  uses: actions/upload-pages-artifact@v3
+  with:
+    path: site
+
 
   deploy:
     needs: build
