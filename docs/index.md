@@ -6,7 +6,7 @@
        href="https://github.com/openupbooks/collectivechapters/issues/new?template=submit-chapter.yml&title=Chapter%3A%20Your%20topic&labels=chapter-submission">
       ➕ Write your chapter
     </a>
-    <a class="md-button" href="chapters/index.md">Browse chapters</a>
+    <a class="md-button" href="chapters">Browse chapters</a>
   </div>
 </div>
 
