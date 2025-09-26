@@ -1,0 +1,39 @@
+site_name: Open Internet Book
+site_description: A living atlas of global answers to shared questions.
+site_url: https://example.github.io/open-internet-book/
+repo_url: https://github.com/yourname/open-internet-book
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - content.code.copy
+  language: en
+
+nav:
+  - Home: index.md
+  - Questions: questions/index.md
+  - Chapters: chapters/index.md
+
+markdown_extensions:
+  - admonition
+  - footnotes
+  - toc:
+      permalink: true
+  - pymdownx.emoji
+  - pymdownx.tasklist
+  - pymdownx.highlight
+  - pymdownx.superfences
+
+plugins:
+  - search
+  - with-pdf:
+      output_path: book.pdf
+      cover_title: "Open Internet Book"
+      cover_subtitle: "A community experiment in open writing"
+      author: "Community"
+      toc_level: 2
+      enabled_if_env: ALWAYS_PDF
+
+extra:
+  pdf_url: book.pdf
