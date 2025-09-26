@@ -1,17 +1,24 @@
 # scripts/generate_indexes.py
 # Builds:
-# - docs/chapters/index.md (card grid of topics + Add chapter buttons)
-# - docs/chapters/<topic>/index.md (grouped by country + Add chapter)
+# - docs/chapters/index.md (card grid of topics + "Add your chapter" buttons)
+# - docs/chapters/<topic>/index.md (grouped by country + button)
 # - docs/pages/contributors.md (authors + country/language badges)
 
-import os, re, pathlib, collections, urllib.parse
+import os
+import re
+import pathlib
+import collections
+import urllib.parse
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CHAP = ROOT / "docs" / "chapters"
 PAGES = ROOT / "docs" / "pages"
 
+# set via env if needed: REPO_SLUG="owner/repo"
 REPO_SLUG = os.getenv("REPO_SLUG", "openupbooks/collectivechapters")
+
 FM_RE = re.compile(r'^---\n(.*?)\n---\n', re.DOTALL)
+
 
 def parse_front_matter(text: str) -> dict:
     m = FM_RE.match(text)
@@ -23,11 +30,12 @@ def parse_front_matter(text: str) -> dict:
                 data[k.strip()] = v.strip().strip('"').strip("'")
     return data
 
+
 def extract_quote(text: str) -> str:
     lines = text.splitlines()
     for i, line in enumerate(lines):
         if "One-sentence wisdom" in line:
-            for j in range(i+1, len(lines)):
+            for j in range(i + 1, len(lines)):
                 val = lines[j].strip().strip("- ").strip()
                 if val:
                     return val.strip('"')
@@ -36,32 +44,33 @@ def extract_quote(text: str) -> str:
             return line.strip().lstrip("> ").strip()
     return ""
 
+
 def human_title(slug: str) -> str:
     t = slug.replace("-", " ").title()
     if t.lower().startswith("what is "):
         t += "?"
     return t
 
+
 def build():
     CHAP.mkdir(parents=True, exist_ok=True)
     PAGES.mkdir(parents=True, exist_ok=True)
 
-    # Collect topics (also include empty dirs)
-    topics = {}           # slug -> list of chapter meta dicts
-    contributors = {}     # author -> {"countries": set, "languages": set}
+    topics: dict[str, list[dict]] = {}
+    contributors: dict[str, dict] = {}
 
-    # Ensure all topic directories are present in topics dict
+    # include empty topic folders
     for p in CHAP.glob("*"):
         if p.is_dir() and not p.name.startswith("_"):
             topics.setdefault(p.name, [])
 
-    # Scan chapters
+    # scan chapter files
     for md in CHAP.rglob("*.md"):
-        if md.name in ("index.md",) or md.name.startswith("_"):
+        if md.name == "index.md" or md.name.startswith("_"):
             continue
         rel = md.relative_to(CHAP).as_posix()
         parts = rel.split("/")
-        if len(parts) < 2:  # expecting chapters/<topic>/<file>.md
+        if len(parts) < 2:
             continue
         slug = parts[0]
         text = md.read_text(encoding="utf-8", errors="ignore")
@@ -75,17 +84,18 @@ def build():
         lang = (meta.get("language") or "").strip()
         if author:
             entry = contributors.setdefault(author, {"countries": set(), "languages": set()})
-            if country: entry["countries"].add(country)
-            if lang: entry["languages"].add(lang)
+            if country:
+                entry["countries"].add(country)
+            if lang:
+                entry["languages"].add(lang)
 
-    # ---------- Chapters grid (cards) ----------
+    # ---- Chapters grid (cards) ----
     grid = ["# Chapters", "", "Browse topics by collected chapters.", "", '<div class="cc-grid">']
     for slug in sorted(topics.keys()):
         entries = topics[slug]
         n = len(entries)
         countries = sorted({(e.get("country") or "Unknown") for e in entries}) if n else []
         ttitle = human_title(slug)
-        # pick a teaser quote or invite text
         teaser = ""
         for e in entries:
             if e.get("quote"):
@@ -93,26 +103,30 @@ def build():
                 break
         if not teaser:
             teaser = "Be the first to contribute a chapter."
+
         issue_title = urllib.parse.quote_plus(f"Chapter: {ttitle}")
-        issue_url = (f"https://github.com/{REPO_SLUG}/issues/new"
-                     f"?template=submit-chapter.yml&title={issue_title}&labels=chapter-submission")
+        issue_url = (
+            f"https://github.com/{REPO_SLUG}/issues/new"
+            f"?template=submit-chapter.yml&title={issue_title}&labels=chapter-submission"
+        )
 
         grid += [
             '<div class="cc-card">',
             f'  <h3><a href="./{slug}/index.md">{ttitle}</a></h3>',
-            f'  <p class="cc-meta">{n} chapter{"s" if n!=1 else ""}' +
-            (f' • {len(countries)} countr{"ies" if len(countries)!=1 else "y"}' if n else '') + '</p>',
+            f'  <p class="cc-meta">{n} chapter{"s" if n != 1 else ""}'
+            + (f' • {len(countries)} countr{"ies" if len(countries) != 1 else "y"}' if n else '')
+            + '</p>',
             f'  <p class="cc-quote">“{teaser}”</p>',
             '  <div class="cc-actions">',
             f'    <a class="md-button md-button--primary" data-cc-cta="add-chapter" data-cc-topic="{slug}" href="{issue_url}">Add your chapter</a>',
             f'    <a class="md-button" href="./{slug}/index.md">Read</a>',
             '  </div>',
-            '</div>'
+            '</div>',
         ]
     grid.append("</div>")
     (CHAP / "index.md").write_text("\n".join(grid) + "\n", encoding="utf-8")
 
-    # ---------- Per-topic index (grouped by country) ----------
+    # ---- Per-topic index (grouped by country) ----
     for slug, entries in topics.items():
         by_country = collections.defaultdict(list)
         for e in entries:
@@ -120,8 +134,10 @@ def build():
 
         title = human_title(slug)
         issue_title = urllib.parse.quote_plus(f"Chapter: {title}")
-        issue_url = (f"https://github.com/{REPO_SLUG}/issues/new"
-                     f"?template=submit-chapter.yml&title={issue_title}&labels=chapter-submission")
+        issue_url = (
+            f"https://github.com/{REPO_SLUG}/issues/new"
+            f"?template=submit-chapter.yml&title={issue_title}&labels=chapter-submission"
+        )
 
         lines = [
             f"# {title}",
@@ -129,7 +145,7 @@ def build():
             f"[➕ Add your chapter]({issue_url})" + " { .md-button .md-button--primary }",
             "",
             "Contributions grouped by country.",
-            ""
+            "",
         ]
         if not entries:
             lines += ["_No chapters yet. Be the first to add yours!_", ""]
@@ -138,19 +154,23 @@ def build():
             lines.append(f"## {country}")
             for e in sorted(by_country[country], key=lambda x: x.get("author", "")):
                 bits = []
-                if e.get("religion"): bits.append(f"Religion: {e['religion']}")
-                if e.get("language"): bits.append(f"Language: {e['language']}")
+                if e.get("religion"):
+                    bits.append(f"Religion: {e['religion']}")
+                if e.get("language"):
+                    bits.append(f"Language: {e['language']}")
                 meta_line = " · ".join(bits)
                 lines.append(f"- [{e.get('author','Unknown')}]({e['file']})  ")
-                if meta_line: lines.append(f"  *{meta_line}*  ")
-                if e.get("quote"): lines.append(f"  > *{e['quote']}*  ")
+                if meta_line:
+                    lines.append(f"  *{meta_line}*  ")
+                if e.get("quote"):
+                    lines.append(f"  > *{e['quote']}*  ")
             lines.append("")
 
         tdir = CHAP / slug
         tdir.mkdir(parents=True, exist_ok=True)
         (tdir / "index.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
-    # ---------- All contributors ----------
+    # ---- All contributors ----
     clines = ["# All contributors", "", "People who have contributed chapters.", ""]
     for name in sorted(contributors.keys()):
         entry = contributors[name]
@@ -158,16 +178,16 @@ def build():
         l_badges = " ".join([f'<span class="cc-badge">{l}</span>' for l in sorted(entry["languages"])]) or ""
         line = f"- {name}"
         extras = []
-        if c_badges: extras.append(f'<span class="cc-badges">{c_badges}</span>')
-        if l_badges: extras.append(f'<span class="cc-badges">{l_badges}</span>')
-        if extras: line += " " + " ".join(extras)
+        if c_badges:
+            extras.append(f'<span class="cc-badges">{c_badges}</span>')
+        if l_badges:
+            extras.append(f'<span class="cc-badges">{l_badges}</span>')
+        if extras:
+            line += " " + " ".join(extras)
         clines.append(line)
     (PAGES / "contributors.md").write_text("\n".join(clines) + "\n", encoding="utf-8")
+
 
 if __name__ == "__main__":
     build()
     print("Indexes, topic pages, and contributors page generated.")
-  - name: Generate indexes & contributors
-    env:
-      REPO_SLUG: openupbooks/collectivechapters
-    run: python scripts/generate_indexes.py
