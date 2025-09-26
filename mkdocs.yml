@@ -1,7 +1,7 @@
-site_name: Open Internet Book
-site_description: A living atlas of global answers to shared questions.
-site_url: https://example.github.io/open-internet-book/
-repo_url: https://github.com/yourname/open-internet-book
+site_name: Collective Chapters
+site_description: A living book of global answers to shared questions.
+site_url: https://openupbooks.github.io/CollectiveChapters/
+repo_url: https://github.com/yourname/CollectiveChapters
 theme:
   name: material
   features:
@@ -13,7 +13,6 @@ theme:
 nav:
   - Home: index.md
   - Questions: questions/index.md
-  - Chapters: chapters/index.md
 
 markdown_extensions:
   - admonition
@@ -29,9 +28,9 @@ plugins:
   - search
   - with-pdf:
       output_path: book.pdf
-      cover_title: "Open Internet Book"
+      cover_title: "Collective Chapters by Open Up Books"
       cover_subtitle: "A community experiment in open writing"
-      author: "Community"
+      author: "The Community"
       toc_level: 2
       enabled_if_env: ALWAYS_PDF
 
