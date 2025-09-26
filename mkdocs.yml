@@ -33,6 +33,7 @@ markdown_extensions:
   - pymdownx.tasklist
   - pymdownx.highlight
   - pymdownx.superfences
+  - attr_list 
 
 plugins:
   - search
@@ -41,3 +42,4 @@ extra:
   analytics:
     provider: google
     property: G-XXXXXXXXXX   # Replace with your GA4 property
+
