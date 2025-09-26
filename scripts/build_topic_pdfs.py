@@ -56,15 +56,13 @@ def make_agg(slug):
 def build_pdf(slug):
     import yaml, subprocess
     base = yaml.safe_load((ROOT / "mkdocs.yml").read_text(encoding="utf-8"))
+
+    # ✅ make paths absolute so MkDocs doesn’t look under /tmp/
+    base["docs_dir"] = str((ROOT / "docs").resolve())
+    base["site_dir"] = str((ROOT / "site").resolve())
+
     agg = make_agg(slug)
-    base["plugins"] = [p for p in base.get("plugins", []) if not (isinstance(p, dict) and "with-pdf" in p)]
-    base.setdefault("plugins", []).append({"with-pdf": {"output_path": f"books/{slug}.pdf", "enabled_if_env": "ALWAYS_PDF"}})
-    base["nav"] = [{"Home": "index.md"}, {slug.replace("-"," ").title(): str(agg.relative_to(ROOT/'docs'))}]
-    base.setdefault("extra", {})["pdf_url"] = f"books/{slug}.pdf"
-    tmp = pathlib.Path(tempfile.mkdtemp()) / "mkdocs.yml"
-    tmp.write_text(yaml.safe_dump(base, sort_keys=False), encoding="utf-8")
-    env = os.environ.copy(); env["ALWAYS_PDF"]="1"
-    subprocess.run(["mkdocs","build","--clean",f"--config-file={tmp}"], cwd=str(ROOT), env=env, check=True)
+    # keep the rest as is…
 
 def add_links():
     for slug in list_topics():
