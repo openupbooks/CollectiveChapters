@@ -1,0 +1,39 @@
+/* Buttons */
+.md-button { border-radius: 9999px; padding: .6rem 1rem; }
+.md-button--primary { font-weight: 600; }
+
+/* Hero */
+.cc-hero {
+  padding: 3rem 1.5rem;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #f6f6f6, #ffffff);
+  margin-bottom: 2rem;
+}
+.cc-hero h1 { margin: 0 0 .5rem 0; font-size: clamp(2rem, 4vw, 3rem); }
+.cc-hero p { margin: 0 0 1rem 0; font-size: 1.1rem; opacity: .9; }
+.cc-hero .cc-actions { display: flex; gap: .75rem; flex-wrap: wrap; }
+
+/* Chapters grid */
+.cc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  margin: 1rem 0 2rem;
+}
+.cc-card {
+  display: flex; flex-direction: column;
+  border: 1px solid #eaeaea; border-radius: 16px;
+  padding: 1rem; text-decoration: none;
+  background: #fff;
+}
+.cc-card h3 { margin: .25rem 0 .5rem; }
+.cc-card .cc-meta { font-size: .9rem; opacity: .7; margin: 0 0 .5rem; }
+.cc-card .cc-quote { font-style: italic; opacity: .85; margin: 0 0 1rem; }
+.cc-card .cc-actions { margin-top: auto; display: flex; gap: .5rem; }
+
+/* Badges (contributors) */
+.cc-badges { display: inline-flex; gap: .35rem; flex-wrap: wrap; margin-left: .25rem; }
+.cc-badge {
+  background: #f1f1f1; border: 1px solid #e6e6e6; border-radius: 999px;
+  padding: .1rem .6rem; font-size: .75rem;
+}
