@@ -23,8 +23,10 @@ jobs:
       - name: Build site (no global PDF)
         run: |
           mkdocs build --clean
-      - name: Build per-topic PDFs
-        run: python scripts/build_topic_pdfs.py
+  	  - name: Build per-topic PDFs
+      if: false
+      run: python scripts/build_topic_pdfs.py
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
