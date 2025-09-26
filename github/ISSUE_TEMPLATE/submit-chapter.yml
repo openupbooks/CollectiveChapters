@@ -1,0 +1,49 @@
+name: Submit a chapter
+description: Send your chapter without knowing Git; a maintainer will turn this into a PR.
+title: "Chapter: <title>"
+labels: ["chapter-submission"]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      placeholder: "Title of your chapter"
+    validations:
+      required: true
+  - type: input
+    id: author
+    attributes:
+      label: Author (name or pseudonym)
+    validations:
+      required: true
+  - type: input
+    id: country
+    attributes:
+      label: Country
+      placeholder: "e.g., Netherlands"
+    validations:
+      required: true
+  - type: input
+    id: religion
+    attributes:
+      label: Religion (optional)
+      placeholder: "e.g., Christianity, Hinduism, None"
+  - type: input
+    id: language
+    attributes:
+      label: Language
+      placeholder: "e.g., English, Spanish"
+    validations:
+      required: true
+  - type: textarea
+    id: summary
+    attributes:
+      label: Short summary (one-liner)
+      placeholder: "Optional"
+  - type: textarea
+    id: content
+    attributes:
+      label: Chapter (Markdown allowed)
+      description: Paste your text here. A maintainer will convert this into a PR.
+    validations:
+      required: true
