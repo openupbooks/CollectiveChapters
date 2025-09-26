@@ -1,18 +1,28 @@
 site_name: Collective Chapters
-site_description: A living book of global answers to shared questions.
-site_url: https://openupbooks.github.io/CollectiveChapters/
-repo_url: https://github.com/yourname/CollectiveChapters
+site_description: A global open writing project on life’s big philosophical questions.
+site_url: https://example.github.io/collectivechapters/
+repo_url: https://github.com/openupbooks/collectivechapters
+
 theme:
   name: material
+  language: en
+  favicon: assets/favicon.png
+  logo: assets/logo.svg
   features:
     - navigation.tabs
     - navigation.sections
     - content.code.copy
-  language: en
+  palette:
+    - scheme: default
+      primary: grey
+      accent: grey
 
 nav:
   - Home: index.md
-  - Questions: questions/index.md
+  - Chapters: chapters/index.md
+  - About Project: pages/about.md
+  - All contributors: pages/contributors.md
+  - Contact: pages/contact.md
 
 markdown_extensions:
   - admonition
@@ -26,13 +36,8 @@ markdown_extensions:
 
 plugins:
   - search
-  - with-pdf:
-      output_path: book.pdf
-      cover_title: "Collective Chapters by Open Up Books"
-      cover_subtitle: "A community experiment in open writing"
-      author: "The Community"
-      toc_level: 2
-      enabled_if_env: ALWAYS_PDF
 
 extra:
-  pdf_url: book.pdf
+  analytics:
+    provider: google
+    property: G-XXXXXXXXXX   # Replace with your GA4 property

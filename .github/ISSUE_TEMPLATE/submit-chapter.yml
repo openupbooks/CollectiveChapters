@@ -7,7 +7,6 @@ body:
     id: title
     attributes:
       label: Title
-      placeholder: "Title of your chapter"
     validations:
       required: true
   - type: input
@@ -20,19 +19,16 @@ body:
     id: country
     attributes:
       label: Country
-      placeholder: "e.g., Netherlands"
     validations:
       required: true
   - type: input
     id: religion
     attributes:
       label: Religion (optional)
-      placeholder: "e.g., Christianity, Hinduism, None"
   - type: input
     id: language
     attributes:
       label: Language
-      placeholder: "e.g., English, Spanish"
     validations:
       required: true
   - type: textarea

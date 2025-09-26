@@ -1,8 +1,8 @@
-# Open Internet Book
+# Collective Chapters
 
-Welcome! This is an open book where everyone can contribute a chapter.
+Welcome! This is an open book where everyone can contribute a chapter on life’s big philosophical questions.
 
-- **Read online** via the navigation.
-- **Download** the full book as PDF: [book.pdf](book.pdf)
-- **Explore questions:** [Questions](questions/index.md)
-- **How to contribute:** see the template in `docs/questions/_chapter-template.md`.
+- **Explore topics:** [Chapters](chapters/index.md)
+- **How to contribute:** copy the template in `chapters/_chapter-template.md` and submit a PR.
+
+> *Our aim is to reveal both differences and common ground, bringing people closer together through shared stories.*

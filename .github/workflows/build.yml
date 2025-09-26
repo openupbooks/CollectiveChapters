@@ -15,15 +15,16 @@ jobs:
           python-version: '3.x'
       - name: Install deps
         run: |
-          pip install mkdocs mkdocs-material mkdocs-with-pdf pymdown-extensions
+          pip install mkdocs mkdocs-material mkdocs-with-pdf pymdown-extensions pyyaml
       - name: Content check
         run: python scripts/content_check.py
-      - name: Generate indexes
+      - name: Generate indexes & contributors
         run: python scripts/generate_indexes.py
-      - name: Build site (HTML + PDF)
+      - name: Build site (no global PDF)
         run: |
-          export ALWAYS_PDF=1
           mkdocs build --clean
+      - name: Build per-topic PDFs
+        run: python scripts/build_topic_pdfs.py
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
