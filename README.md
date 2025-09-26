@@ -1,4 +1,4 @@
-# Open Internet Book — Starter Kit (Questions + Auto-Index)
+# Collective Chapters — Starter Kit (Questions + Auto-Index)
 
 An open, curated book project. This starter builds a public website and a single PDF,
 and auto-generates index pages per **question**, grouped by **country** with useful metadata.
