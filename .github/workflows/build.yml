@@ -5,45 +5,50 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+# Permissions required for Pages deploy
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Avoid overlapping deployments
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/setup-python@v5
         with:
           python-version: '3.x'
+
       - name: Install deps
         run: |
-          pip install mkdocs mkdocs-material mkdocs-with-pdf pymdown-extensions pyyaml
-- name: Content check
-  run: python scripts/content_check.py
+          pip install mkdocs mkdocs-material pymdown-extensions
 
-- name: Generate indexes & contributors
-  env:
-    REPO_SLUG: openupbooks/collectivechapters
-  run: python scripts/generate_indexes.py
+      - name: Content check
+        run: python scripts/content_check.py
 
-- name: Build site (no global PDF)
-  run: |
-    mkdocs build --clean
+      - name: Generate indexes & contributors
+        env:
+          REPO_SLUG: openupbooks/collectivechapters   # <-- pas aan indien nodig
+        run: python scripts/generate_indexes.py
 
-# (PDF stap uitgeschakeld)
-# - name: Build per-topic PDFs
-#   if: false
-#   run: python scripts/build_topic_pdfs.py
+      - name: Build site (no global PDF)
+        run: |
+          mkdocs build --clean
 
-- name: Upload artifact
-  uses: actions/upload-pages-artifact@v3
-  with:
-    path: site
-
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
 
   deploy:
     needs: build
-    permissions:
-      pages: write
-      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
