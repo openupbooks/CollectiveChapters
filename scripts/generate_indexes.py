@@ -1,4 +1,4 @@
-import re, pathlib, collections
+import re, pathlib, collections, urllib.parse
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 CHAP = ROOT / "docs" / "chapters"
